@@ -28,13 +28,9 @@
 		</a>
 	</nav>
 
-	<div class="container text-center">
-
-		<div class="upload-container">
-			<div class="upload-header">
-				<h2>ML</h2>
-			</div>
-			<div class="upload-content">
+	<div class="container">
+		<div class="upload-container ">
+			<div class="upload-content text-center">
 				<div class="single-upload">
 					<h3>Operaciones del per&iacute;odo</h3>
 					<form method="POST" enctype="multipart/form-data" action="/controlfy/uploadFile">
@@ -45,17 +41,16 @@
 			</div>
 			
 			<div class="container" th:if="${control != null}">
-				<div class="card" style="width: 100%;" >
+				<div class="card" style="width: 100%; margin-top: 20px;" >
 				  <ul class="list-group list-group-flush">
+				    <li class="list-group-item" style="background-color: rgba(184, 195, 31, 0.65);">  <b> Resumen</b>   </li>
 				    <li class="list-group-item">  <b> Cantidad filas: </b><span th:text="${control.cantidadMovimientos}"></span>   </li>
 				  </ul>
 				</div>
 			</div>
-						
 		</div>
-
-
 	</div>
+	
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

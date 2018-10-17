@@ -42,7 +42,7 @@ button {
     outline: none;
     line-height: 100%;
     white-space: nowrap;
-    vertical-align: middle;
+    vertical-align: bottom;
     padding: 0.6rem 1rem;
     border-radius: 2px;
     transition: all 0.2s ease-in-out;
@@ -54,6 +54,7 @@ button.primary {
     background-color: #128ff2;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
     color: #fff;
+    height: 44px;
 }
 
 input {
@@ -67,7 +68,7 @@ input[type="file"] {
 }
 
 .file-input {
-    width: 100%;
+     width: calc(100% - 175px);
 }
 
 .submit-btn {
@@ -78,7 +79,7 @@ input[type="file"] {
 
 @media screen and (min-width: 500px) {
     .file-input {
-        width: calc(100% - 115px);
+        width: calc(100% - 175px);
     }
 
     .submit-btn {
@@ -90,13 +91,13 @@ input[type="file"] {
 
 
 .upload-container {
-      max-width: 750px;
+      max-width: 850px;
       margin-left: auto;
       margin-right: auto;
       background-color: #fff;
       box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
       margin-top: 60px;
-      min-height: 400px;
+      /* min-height: 400px; */
       position: relative;
       padding: 20px;
 }
@@ -111,8 +112,10 @@ input[type="file"] {
 
 .single-upload {
     padding-bottom: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border-bottom: 1px solid #e8e8e8;
+    margin-left: 12px;
+    margin-right: 12px;    
 }
 
 .upload-response {
