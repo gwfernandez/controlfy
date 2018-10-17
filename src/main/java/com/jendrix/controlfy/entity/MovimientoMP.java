@@ -1,9 +1,9 @@
-package com.jendrix.controlfy.model;
+package com.jendrix.controlfy.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class MovimientoModel {
+public class MovimientoMP {
 
 	private Long numeroMovimiento; // col 3
 	private String tipoOperacion; // col 2
@@ -59,5 +59,4 @@ public class MovimientoModel {
 	public void setOperacionRelacionada(Long operacionRelacionada) {
 		this.operacionRelacionada = operacionRelacionada;
 	}
-
 }

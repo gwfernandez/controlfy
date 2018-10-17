@@ -40,13 +40,21 @@
 				</div>
 			</div>
 			
-			<div class="container" th:if="${control != null}">
-				<div class="card" style="width: 100%; margin-top: 20px;" >
-				  <ul class="list-group list-group-flush">
-				    <li class="list-group-item" style="background-color: rgba(184, 195, 31, 0.65);">  <b> Resumen</b>   </li>
-				    <li class="list-group-item">  <b> Cantidad filas: </b><span th:text="${control.cantidadMovimientos}"></span>   </li>
-				  </ul>
-				</div>
+			<div class="container" th:if="${resumenList != null}">				
+				<table class="table">
+				  <thead class="thead-light">
+				    <tr>
+				      <th scope="col">Tipo Operacion</th>
+				      <th scope="col">Importe</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr th:each="item : ${resumenList}">
+				      <td><span th:text="${item.tipoOperacion}"> </span></td>
+				      <td><span th:text="${item.importeTotal}"> </span></td>
+				    </tr>
+				  </tbody>
+				</table>
 			</div>
 		</div>
 	</div>

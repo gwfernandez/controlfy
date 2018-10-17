@@ -2,12 +2,10 @@ package com.jendrix.controlfy.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -18,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.jendrix.controlfy.mapper.MovimientoMapper;
 import com.jendrix.controlfy.model.ControlModel;
 import com.jendrix.controlfy.model.MovimientoModel;
+import com.jendrix.controlfy.model.ResumenModel;
 
 @Controller
 public class ControlfyController {
@@ -27,26 +27,39 @@ public class ControlfyController {
 	private MultipartFile fileupload;
 	private Workbook workbook;
 	private Sheet sheet;
-	
-	private ControlModel control;  
+
+	private ControlModel control;
+	private HashMap<String, ResumenModel> resumenHash;
+
+	// este metodo podria estar del procesarExcel
+	private List<ResumenModel> getResumenList() {
+		List<ResumenModel> list = new ArrayList<>();
+		if (this.resumenHash != null) {
+			list.addAll(this.resumenHash.values());
+		}
+
+		return list;
+	}
 
 	@PostMapping("/uploadFile")
-	public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, Model model) {
+	public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes,
+			Model model) {
 
-		try {			
+		try {
 			// valido el archivo excel
 			this.fileupload = file;
 			validarArchivo();
 
 			procesarExcel();
-			
+
 			model.addAttribute("control", this.control);
+			model.addAttribute("resumenList", getResumenList());
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 
-		//return "redirect:/";
+		// return "redirect:/";
 		return "index";
 	}
 
@@ -77,40 +90,26 @@ public class ControlfyController {
 		List<MovimientoModel> movimientoList = new ArrayList<MovimientoModel>();
 		this.control = new ControlModel();
 		this.control.setCantidadMovimientos(0);
+		this.resumenHash = new HashMap<>();
+		ResumenModel resumen = null;
 		for (int i = 1; i < this.sheet.getPhysicalNumberOfRows(); i++) {
-			MovimientoModel movimientoModel = mapearFila(this.sheet.getRow(i));
-			movimientoList.add(movimientoModel);
-			this.control.setCantidadMovimientos(this.control.getCantidadMovimientos() + 1);
-		}
-	}
-	
-	private MovimientoModel mapearFila(Row row) {
-		MovimientoModel movimiento = new MovimientoModel();
-
-		try {
-
-			// leer columna codigo de articulo
-			Cell cellCodigoArticulo = row.getCell(0);
 			try {
-				if (CellType.NUMERIC == cellCodigoArticulo.getCellType()) {
-					//promoMasiva.setCodigoArticuloFVG(((long) cellCodigoArticulo.getNumericCellValue()));
-					System.out.println();
+				MovimientoModel movimientoModel = MovimientoMapper.getInstance().map(this.sheet.getRow(i));
+				if (this.resumenHash.containsKey(movimientoModel.getTipoOperacion())) {
+					ResumenModel res = this.resumenHash.get(movimientoModel.getTipoOperacion());
+					res.setImporteTotal(res.getImporteTotal().add(movimientoModel.getImporte()));
 				} else {
-					cellCodigoArticulo.setCellType(CellType.STRING);
-					//promoMasiva.setCodigoArticuloFVG(Long.valueOf(cellCodigoArticulo.getStringCellValue()));
+					resumen = new ResumenModel();
+					resumen.setTipoOperacion(movimientoModel.getTipoOperacion());
+					this.resumenHash.put(movimientoModel.getTipoOperacion(), resumen);
 				}
+
+				movimientoList.add(movimientoModel);
+				this.control.setCantidadMovimientos(this.control.getCantidadMovimientos() + 1);
 			} catch (Exception e) {
-				cellCodigoArticulo.setCellType(CellType.STRING);
-				//msg.addError("Codigo de articulo incorrecto: " + cellCodigoArticulo.getStringCellValue());
+				System.out.println(e.getMessage());
 			}
-
-
-		} catch (Exception e) {
-			//msg.addError("Error leyendo los datos de la promo");
 		}
-		
-		return movimiento;
 	}
-	
 
 }
